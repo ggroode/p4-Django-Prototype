@@ -17,12 +17,8 @@
       */
       app.getNameAndJoin = function getNameAndJoin() {
         let name = document.getElementById('name').value;
-        $("#topText").html('Waiting for host to start game!');
         socket.send(name);
-      }
-
-      socket.onmessage = function(receivedMessage) {
-
+        window.location.href = "{% url 'write' %}" + "?name=" + name;
       }
     }
   </script>
