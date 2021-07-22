@@ -2,11 +2,12 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 
-class DrawConsumer(WebsocketConsumer):
+class BasicConsumer(WebsocketConsumer):
+    identifier = 'all'
     def connect(self):
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            'all',
+            self.identifier,
             self.channel_name
         )
 
@@ -15,7 +16,7 @@ class DrawConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            'all',
+            self.identifier,
             self.channel_name
         )
 
@@ -24,7 +25,7 @@ class DrawConsumer(WebsocketConsumer):
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            'all',
+            self.identifier,
             {
                 'type': 'chat_message',
                 'message': text_data
@@ -34,6 +35,10 @@ class DrawConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
-
         # Send message to WebSocket
         self.send(text_data=message)
+
+class SetupConsumer(BasicConsumer):
+    identifier='setup'
+class PlayConsumer(BasicConsumer):
+    identifier='play'
