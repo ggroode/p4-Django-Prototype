@@ -5,18 +5,32 @@
     app = {}
 
     window.onload = function() {
+      app.storyID=-1;
       var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
+      app.story = "";
       socket.onmessage = function(receivedMessage) {
-        console.log(receivedMessage);
+        let data = JSON.parse(receivedMessage.data);
+        if (data['name']=="{{name}}"){
+          if ('id' in data){ //handling storyID changes
+            app.storyID = data['id'];
+          }
+          if ('story' in data){
+            app.story = data['story']
+            $('#topMessage').html('Story so far: ' + app.story);
+            document.getElementById('testInput').value="";
+          }
+          console.log(data);
+        }
       }
       app.sendMessage = function sendMessage(){
         let msg = document.getElementById('testInput').value;
-        socket.send(msg);
+        socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg}));
       }
     }
   </script>
 {% endblock scripts %}
 {% block body %}
+  <p id= 'topMessage'>Write a story: </p>
   <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn>
 {% endblock body %}

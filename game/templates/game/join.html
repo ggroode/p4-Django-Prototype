@@ -3,7 +3,7 @@
 {% block scripts %}
   <script>
     app = {}
-
+    
     window.onload = function() {
       var socket = new WebSocket('ws://' + window.location.host + '/ws/setup');
       socket.onmessage = function(receivedMessage) {
