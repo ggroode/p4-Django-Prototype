@@ -6,17 +6,68 @@
 
     window.onload = function() {
       var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
+      app.players = {{players|safe}}
+      app.recieved = 0;
+      app.updateSpeed = "{{updateSpeed}}";
+      app.gameOver = false;
+
+
+
       socket.onmessage = function(receivedMessage) {
-        console.log(receivedMessage);
+        let data = JSON.parse(receivedMessage.data);
+        if (data['name']=="host"){
+          let id = data['id'];
+          app.stories[id] = data['story'];
+          app.recieved+=1;
+          if ((app.updateSpeed == 'fast') || (app.updateSpeed=='normal' && app.recieved == app.players.length) || app.gameOver) {
+            app.updateStories();
+          }
+          //TODO: Check Game End Position
+          if (app.recieved==app.players.length){
+            app.swapStories();
+            app.recieved=0;
+          }
+        }
+        console.log(receivedMessage['data']);
       }
-      app.sendMessage = function sendMessage(){
-        let msg = document.getElementById('testInput').value;
-        socket.send(msg);
+
+      app.swapStories = function(){
+        app.players.push(app.players.shift()); //Changes ID order
+        app.players.forEach((element,index) => socket.send(JSON.stringify({'name':element,'id':index+1,'story':app.stories[index+1]})));
+      }
+
+
+
+
+      // app.sendMessage = function sendMessage(){
+      //   let msg = document.getElementById('testInput').value;
+      //   socket.send(msg);
+      // }
+
+
+
+
+      app.setup = function(){
+        app.stories = {};
+        app.players.forEach((element,index) => socket.send(JSON.stringify({'name':element,'id':index+1})));
+        app.players.forEach((element,index) => app.stories[index]="");
+      }
+      socket.onopen = app.setup;
+
+      app.updateStories = function(){
+        for(let id = 1; id<=app.players.length; id++){
+          $('#'+id).html(app.stories[id]);
+        }
       }
     }
   </script>
 {% endblock scripts %}
 {% block body %}
-  <input id="testInput"\>
-  <btn onclick="app.sendMessage()"> Submit </btn>
+  <ol>
+  {% for player in playersList %}
+    <li id="{{forloop.counter}}"></li>
+  {% endfor %}
+  <ol>
+  <!-- <input id="testInput"\>
+  <btn onclick="app.sendMessage()"> Submit </btn> -->
 {% endblock body %}

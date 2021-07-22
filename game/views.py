@@ -1,5 +1,6 @@
 # chat/views.py
 from django.shortcuts import render
+import json
 
 
 # def room(request, room_name):
@@ -17,7 +18,10 @@ def settings(request):
     return render(request, 'game/settings.html')
 
 def play(request):
-    return render(request, 'game/play.html')
+    players = request.GET.get('players',['Gavin','Yingyan']) #TODO: change default value of off testing one
+    updateSpeed = request.GET.get('updateSpeed','normal')
+    return render(request, 'game/play.html',{'players':json.dumps(players),'playersList':players,'updateSpeed':updateSpeed})
 
 def write(request):
-    return render(request, 'game/write.html')
+    name = request.GET.get('name','Gavin') #TODO: change default value of off testing one
+    return render(request, 'game/write.html',{'name':name})
