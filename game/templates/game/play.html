@@ -39,10 +39,10 @@
 
 
 
-      app.sendMessage = function sendMessage(){
-        let msg = document.getElementById('testInput').value;
-        socket.send(msg);
-      }
+      // app.sendMessage = function sendMessage(){
+      //   let msg = document.getElementById('testInput').value;
+      //   socket.send(msg);
+      // }
 
 
 
@@ -68,6 +68,6 @@
     <li id="{{forloop.counter}}"></li>
   {% endfor %}
   <ol>
-  <input id="testInput"\>
-  <btn onclick="app.sendMessage()"> Submit </btn>
+  <!-- <input id="testInput"\>
+  <btn onclick="app.sendMessage()"> Submit </btn> -->
 {% endblock body %}
