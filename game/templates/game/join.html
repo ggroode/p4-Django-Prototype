@@ -9,14 +9,30 @@
       socket.onmessage = function(receivedMessage) {
         console.log(receivedMessage);
       }
+      /*
       app.sendMessage = function sendMessage(){
         let msg = document.getElementById('testInput').value;
         socket.send(msg);
+      }
+      */
+      app.getNameAndJoin = function getNameAndJoin() {
+        let name = document.getElementById('name').value;
+        $("#topText").html('Waiting for host to start game!');
+        socket.send(name);
+      }
+
+      socket.onmessage = function(receivedMessage) {
+
       }
     }
   </script>
 {% endblock scripts %}
 {% block body %}
+  <!--
   <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn>
+  -->
+  <div id="topText">Enter your name then press join!</div>
+  <input id="name"\>
+  <btn onclick="app.getNameAndJoin()"> Join </btn>
 {% endblock body %}
