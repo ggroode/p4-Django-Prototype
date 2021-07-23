@@ -21,9 +21,7 @@
         let data = JSON.parse(receivedMessage.data);
         if (data['name']=="host"){
           let id = data['id'];
-          if (data['gameOver']){
-            app.gameOver=true;
-          }
+
           if (data['reset']){
             app.reset+=1;
             if (app.reset == app.players.length){
@@ -31,8 +29,12 @@
             }
           }
           app.stories[id] = data['story'];
-          app.recieved+=1;
-
+          if (data['final']){
+            app.recieved+=1;
+            if (data['gameOver']){
+              app.gameOver=true;
+            }
+          }
           let allRecieved = app.recieved == app.players.length
           if ((app.updateSpeed == 'fast') || (allRecieved && (app.updateSpeed=='normal' || app.gameOver))) {
             app.updateStories();

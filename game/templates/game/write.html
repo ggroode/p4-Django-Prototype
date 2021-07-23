@@ -9,6 +9,7 @@
       var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
       $("#testInput").hide();
       $('#testBtn').hide();
+      $('#timer').hide();
       socket.onopen = function(){
         socket.send(JSON.stringify({name:'host',reset:true}));
       }
@@ -16,6 +17,19 @@
       app.prompts= ["space","UC Berkeley",'aliens','dogs','a prince in a castle','nuclear war','the apocolypse',
       'fun things to do on a weekend','timetravel','your least favorite things','christmas','an angry old man',
       'a happy young couple'];
+
+
+      app.countdown=function countdown() {
+        if (app.timeLeft == -1) {
+          clearTimeout(app.timerId);
+          app.sendMessage(true);
+          app.timeLeft = app.roundTime;
+        } else {
+          $('#timer').html(app.timeLeft + ' seconds remaining');
+          app.sendMessage(false);
+          app.timeLeft--;
+        }
+      }
 
       socket.onmessage = function(receivedMessage) {
         let data = JSON.parse(receivedMessage.data);
@@ -30,6 +44,7 @@
             app.story = data['story'];
             $('#topMessage').html('Story so far: ' + app.story);
             document.getElementById('testInput').value="";
+            app.timerId = setInterval(app.countdown,1000);
           } else if ('reset' in data){ //Handling a game reset
             window.location.href = window.location.href;
           }
@@ -42,29 +57,37 @@
             else{
               $('#topMessage').html('Write a story:')
             }
+            app.roundTime = data['roundTime'];
+            app.timeLeft = data['roundTime'];
+            app.timerId = setInterval(app.countdown,1000);
             $("#testInput").show();
             $('#testBtn').show();
+            $('#timer').show();
           }
           console.log(data);
         }
       }
 
-      app.sendMessage = function(){
+
+
+      app.sendMessage = function(final){
         let msg = document.getElementById('testInput').value;
         let gameOver = msg.split(" ").length < app.minWords;
-        socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg,gameOver:gameOver}));
+        socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg,gameOver:gameOver,final:final}));
       }
 
       app.handleGameOver = function (){
         $('#topMessage').html('Game Over! Look at main screen to see stories and wait for host to restart game.')
         $('#testInput').hide();
         $('#testBtn').hide();
+        $('#timer').hide();
       }
     }
   </script>
 {% endblock scripts %}
 {% block body %}
+  <p id='timer'>?? Seconds Remaining</p>
   <p id= 'topMessage'>Wait for the host</p>
   <input id="testInput"\>
-  <btn id='testBtn' onclick="app.sendMessage()"> Submit </btn>
+  <btn id='testBtn' onclick="app.sendMessage(true)"> Submit </btn>
 {% endblock body %}
