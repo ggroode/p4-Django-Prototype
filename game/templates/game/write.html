@@ -6,7 +6,7 @@
 
     window.onload = function() {
       app.storyID=-1;
-      if (location.protocal == 'https:'){
+      if (location.protocol == 'https:'){
         var socket = new WebSocket('wss://' + window.location.host + '/ws/play');
       } else{
         var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
