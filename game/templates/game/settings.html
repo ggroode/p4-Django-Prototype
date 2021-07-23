@@ -17,13 +17,19 @@
       */
       var url = new URL(window.location.href);
       var players = JSON.parse(url.searchParams.get("players"));
-      var presetPrompts = ["cats", "Australia", "mammals", "Berkeley", "noodles"];
-      var prompt = presetPrompts[Math.floor(Math.random() * presetPrompts.length)];
+      var hasPrompt = false;
       
       app.playGame = function playGame() {
         let roundTime = document.getElementById('time').value;
         window.location.href = "{% url 'play' %}" 
-        + "?players=" + JSON.stringify(players) + "&time=" + roundTime + "&prompt=" + prompt;
+        + "?players=" + JSON.stringify(players) + "&time=" + roundTime + "&prompt=" + hasPrompt;
+      }
+
+      app.clickPromptSwitch = function clickPromptSwitch() {
+        if (hasPrompt)
+          hasPrompt = false;
+        else
+          hasPrompt = true;
       }
     }
   </script>
@@ -34,8 +40,16 @@
   <btn onclick="app.sendMessage()"> Submit </btn>
   -->
   <div>
-    <span>Enter a rount time in seconds:</span>
+    <span>Enter a round time in seconds:</span>
     <input id="time"\>
+  </div>
+
+  <div>
+    <span>Prompt</span>
+    <label class="switch">
+      <input type="checkbox" onclick="app.clickPromptSwitch()">
+      <span class="slider round"></span>
+    </label>
   </div>
   
   <button onclick="app.playGame()"> Play </button>
