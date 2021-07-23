@@ -14,17 +14,30 @@
           if ('id' in data){ //handling storyID changes
             app.storyID = data['id'];
           }
-          if ('story' in data){
-            app.story = data['story']
+          if ('gameOver' in data){
+            app.handleGameOver();
+          }
+          else if ('story' in data){
+            app.story = data['story'];
             $('#topMessage').html('Story so far: ' + app.story);
             document.getElementById('testInput').value="";
+          } else{
+            app.minWords = data['minWords'];
           }
           console.log(data);
         }
       }
-      app.sendMessage = function sendMessage(){
+
+      app.sendMessage = function(){
         let msg = document.getElementById('testInput').value;
-        socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg}));
+        let gameOver = msg.split(" ").length < app.minWords;
+        socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg,gameOver:gameOver}));
+      }
+
+      app.handleGameOver = function (){
+        $('#topMessage').html('Game Over! Look at main screen to see stories and wait for host to restart game.')
+        $('#testInput').hide();
+        $('#testBtn').hide();
       }
     }
   </script>
@@ -32,5 +45,5 @@
 {% block body %}
   <p id= 'topMessage'>Write a story: </p>
   <input id="testInput"\>
-  <btn onclick="app.sendMessage()"> Submit </btn>
+  <btn id='testBtn' onclick="app.sendMessage()"> Submit </btn>
 {% endblock body %}

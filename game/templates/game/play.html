@@ -10,6 +10,7 @@
       app.recieved = 0;
       app.updateSpeed = "{{updateSpeed}}";
       app.gameOver = false;
+      app.minWords = 6;
 
 
 
@@ -17,13 +18,19 @@
         let data = JSON.parse(receivedMessage.data);
         if (data['name']=="host"){
           let id = data['id'];
+          if (data['gameOver']){
+            app.gameOver=true;
+          }
           app.stories[id] = data['story'];
           app.recieved+=1;
-          if ((app.updateSpeed == 'fast') || (app.updateSpeed=='normal' && app.recieved == app.players.length) || app.gameOver) {
+          if ((app.updateSpeed == 'fast') || (app.recieved == app.players.length && (app.updateSpeed=='normal' || app.gameOver))) {
             app.updateStories();
           }
           //TODO: Check Game End Position
-          if (app.recieved==app.players.length){
+          if (app.gameOver && app.recieved == app.players.length){
+            app.handleGameOver();
+          }
+          else if (app.recieved==app.players.length){
             app.swapStories();
             app.recieved=0;
           }
@@ -31,26 +38,20 @@
         console.log(receivedMessage['data']);
       }
 
+      app.handleGameOver = function() {
+          $('#Description').html('Game Over!');
+          app.players.forEach((element) => socket.send(JSON.stringify({'name':element,'gameOver':true})));
+      }
+
       app.swapStories = function(){
         app.players.push(app.players.shift()); //Changes ID order
         app.players.forEach((element,index) => socket.send(JSON.stringify({'name':element,'id':index+1,'story':app.stories[index+1]})));
       }
 
-
-
-
-      // app.sendMessage = function sendMessage(){
-      //   let msg = document.getElementById('testInput').value;
-      //   socket.send(msg);
-      // }
-
-
-
-
       app.setup = function(){
         app.stories = {};
-        app.players.forEach((element,index) => socket.send(JSON.stringify({'name':element,'id':index+1})));
-        app.players.forEach((element,index) => app.stories[index]="");
+        app.players.forEach((element,index) => socket.send(JSON.stringify({'name':element,'id':index+1,'minWords':app.minWords})));
+        app.players.forEach((element,index) => app.stories[index+1]="");
       }
       socket.onopen = app.setup;
 
@@ -63,11 +64,15 @@
   </script>
 {% endblock scripts %}
 {% block body %}
-  <ol>
-  {% for player in playersList %}
-    <li id="{{forloop.counter}}"></li>
-  {% endfor %}
-  <ol>
+  <div class='container'>
+    <h2 class='text-center'>Collaborative Storytelling</h2>
+    <h5 id="Description">Write your stories on your phone!</h5>
+    <ol>
+    {% for player in playersList %}
+      <li id="{{forloop.counter}}"></li>
+    {% endfor %}
+    <ol>
+  </div>
   <!-- <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn> -->
 {% endblock body %}
