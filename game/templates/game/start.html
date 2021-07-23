@@ -33,10 +33,15 @@
     Welcome to Collaborative Storytelling!
   </div>
   
-  <div id="qrCode">Scan QR Code to Register.</div>
+  <div id="qrcode">
+    <p>Scan QR Code to Register.</p>
+  </div>
+  <script type="text/javascript">
+    new QRCode(document.getElementById("qrcode"), window.location.href + "join");
+  </script>
   
   <div>
-    <h6>Current Players:</h6>
+    <p>Current Players:</p>
     <ol id="playersList"></ol>
   </div>
   
