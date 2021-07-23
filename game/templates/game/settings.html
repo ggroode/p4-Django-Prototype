@@ -18,18 +18,19 @@
       var url = new URL(window.location.href);
       var players = JSON.parse(url.searchParams.get("players"));
       var hasPrompt = false;
-      
+      app.oneWord = false;
+
       app.playGame = function playGame() {
         let roundTime = document.getElementById('time').value;
-        window.location.href = "{% url 'play' %}" 
-        + "?players=" + JSON.stringify(players) + "&time=" + roundTime + "&prompt=" + hasPrompt;
+        window.location.href = "{% url 'play' %}"
+        + "?players=" + JSON.stringify(players) + "&time=" + roundTime + "&prompt=" + hasPrompt +"&oneWord="+app.oneWord;
       }
 
       app.clickPromptSwitch = function clickPromptSwitch() {
-        if (hasPrompt)
-          hasPrompt = false;
-        else
-          hasPrompt = true;
+        hasPrompt=!hasPrompt;
+      }
+      app.clickRequiredWordSwitch = function clickPromptSwitch() {
+        app.oneWord = !app.oneWord;
       }
     }
   </script>
@@ -45,12 +46,19 @@
   </div>
 
   <div>
-    <span>Prompt</span>
+    <span>Enable Prompt:</span>
     <label class="switch">
       <input type="checkbox" onclick="app.clickPromptSwitch()">
       <span class="slider round"></span>
     </label>
   </div>
-  
+  <div>
+    <span>Enable Required Word:</span>
+    <label class="switch">
+      <input type="checkbox" onclick="app.clickRequiredWordSwitch()">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
   <button onclick="app.playGame()"> Play </button>
 {% endblock body %}

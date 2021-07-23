@@ -20,6 +20,7 @@
       'a happy young couple'];
 
 
+
       app.countdown=function countdown() {
         if (app.timeLeft == -1) {
           clearTimeout(app.timerId);
@@ -43,7 +44,19 @@
           }
           else if ('story' in data){ //handling story Switch
             app.story = data['story'];
-            $('#topMessage').html('Story so far: ' + app.story);
+            app.minWords+=1;
+            if (app.oneWord){
+              let request = new XMLHttpRequest();
+              request.open('GET', 'https://random-word-form.herokuapp.com/random/noun', true);
+              request.onload = function (e){
+                app.word = request.responseText.slice(2,-2);
+                $('#topMessage').html('Continue the story (you must include the word "'+ app.word +'")! The story so far: ' + app.story);
+              }
+              request.send();
+            } else{
+              $('#topMessage').html('Continue the story! The story so far: ' + app.story);
+            }
+
             document.getElementById('testInput').value="";
             app.timerId = setInterval(app.countdown,1000);
           } else if ('reset' in data){ //Handling a game reset
@@ -51,6 +64,8 @@
           }
           else{ //handling startup
             app.minWords = data['minWords'];
+            app.oneWord = data['oneWord'];
+            app.word="";
             if (data['prompt']){
               let prompt = app.prompts[Math.floor(Math.random()*app.prompts.length)];
               $('#topMessage').html('Write a story about ' + prompt +":")
@@ -79,8 +94,26 @@
           requiredWords -= msg.split(/ +/).length;
         }
         $('#wordReminder').html(requiredWords + ' more words needed!');
-        let gameOver = requiredWords>0;
-        socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg,gameOver:gameOver,final:final}));
+        let tooShort = final && requiredWords>0;
+        let missingWord = final && app.oneWord && !msg.match(new RegExp(app.word))
+
+        let gameOver = final && (tooShort || missingWord);
+        if (gameOver){
+          let lossMsg = "{{name}}'s message ";
+          if (tooShort){
+            lossMsg += "was too short"
+            if (missingWord){
+              lossMsg += " and didn't include " + app.word
+            }
+          } else{
+            lossMsg += "didn't include " + app.word
+          }
+            socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg,gameOver:gameOver,final:final,lossMsg:lossMsg}));
+        }
+        else{
+            socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg,gameOver:gameOver,final:final}));
+        }
+
       }
 
       app.handleGameOver = function (){
