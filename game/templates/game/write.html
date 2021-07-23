@@ -7,11 +7,15 @@
     window.onload = function() {
       app.storyID=-1;
       var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
-
+      $("#testInput").hide();
+      $('#testBtn').hide();
       socket.onopen = function(){
         socket.send(JSON.stringify({name:'host',reset:true}));
       }
       app.story = "";
+      app.prompts= ["space","UC Berkeley",'aliens','dogs','a prince in a castle','nuclear war','the apocolypse',
+      'fun things to do on a weekend','timetravel','your least favorite things','christmas','an angry old man',
+      'a happy young couple'];
 
       socket.onmessage = function(receivedMessage) {
         let data = JSON.parse(receivedMessage.data);
@@ -28,10 +32,18 @@
             document.getElementById('testInput').value="";
           } else if ('reset' in data){ //Handling a game reset
             window.location.href = window.location.href;
-
           }
           else{ //handling startup
             app.minWords = data['minWords'];
+            if (data['prompt']){
+              let prompt = app.prompts[Math.floor(Math.random()*app.prompts.length)];
+              $('#topMessage').html('Write a story about ' + prompt +":")
+            }
+            else{
+              $('#topMessage').html('Write a story:')
+            }
+            $("#testInput").show();
+            $('#testBtn').show();
           }
           console.log(data);
         }
@@ -52,7 +64,7 @@
   </script>
 {% endblock scripts %}
 {% block body %}
-  <p id= 'topMessage'>Write a story: </p>
+  <p id= 'topMessage'>Wait for the host</p>
   <input id="testInput"\>
   <btn id='testBtn' onclick="app.sendMessage()"> Submit </btn>
 {% endblock body %}

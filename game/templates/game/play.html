@@ -13,6 +13,7 @@
       app.minWords = 6;
       app.reset=0;
       app.prompt={{prompt}};
+      app.roundTime = {{roundTime}};
       $('#resetButton').hide();
 
 
@@ -63,7 +64,7 @@
 
       app.setup = function(){
         app.stories = {};
-        app.players.forEach((element,index) => socket.send(JSON.stringify({'name':element,'id':index+1,'minWords':app.minWords})));
+        app.players.forEach((element,index) => socket.send(JSON.stringify({'name':element,'id':index+1,'minWords':app.minWords,'roundTime':app.roundTime,'prompt':app.prompt})));
         app.players.forEach((element,index) => app.stories[index+1]="");
       }
       socket.onopen = app.setup;
