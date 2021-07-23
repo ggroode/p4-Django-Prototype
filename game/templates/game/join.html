@@ -9,14 +9,26 @@
       socket.onmessage = function(receivedMessage) {
         console.log(receivedMessage);
       }
+      /*
       app.sendMessage = function sendMessage(){
         let msg = document.getElementById('testInput').value;
         socket.send(msg);
+      }
+      */
+      app.getNameAndJoin = function getNameAndJoin() {
+        let name = document.getElementById('name').value;
+        socket.send(name);
+        window.location.href = "{% url 'write' %}" + "?name=" + name;
       }
     }
   </script>
 {% endblock scripts %}
 {% block body %}
+  <!--
   <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn>
+  -->
+  <div id="topText">Enter your name then press join!</div>
+  <input id="name"\>
+  <btn onclick="app.getNameAndJoin()"> Join </btn>
 {% endblock body %}

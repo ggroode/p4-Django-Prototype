@@ -6,17 +6,41 @@
 
     window.onload = function() {
       var socket = new WebSocket('ws://' + window.location.host + '/ws/setup');
-      socket.onmessage = function(receivedMessage) {
-        console.log(receivedMessage);
-      }
+      /*
       app.sendMessage = function sendMessage(){
         let msg = document.getElementById('testInput').value;
         socket.send(msg);
       }
+      */
+      var players = [];
+      
+      socket.onmessage = function(receivedMessage) {
+        let newName = receivedMessage.data;
+        players.push(newName);
+        $("#playersList").append('<li>' + newName + '</li>');
+      }
+
+      $(document).ready(function() {
+        $("#sb").click(function(){
+          window.location.href = "{% url 'settings' %}" + "?players=" + JSON.stringify(players);
+        }); 
+      });
     }
   </script>
 {% endblock scripts %}
 {% block body %}
-  <input id="testInput"\>
-  <btn onclick="app.sendMessage()"> Submit </btn>
+  <div id="topText">
+    Welcome to Collaborative Storytelling!
+  </div>
+  
+  <div id="qrCode">Scan QR Code to Register.</div>
+  
+  <div>
+    <h6>Current Players:</h6>
+    <ol id="playersList"></ol>
+  </div>
+  
+  <div id="start">
+    <button id="sb">Start</button>
+  </div>
 {% endblock body %}

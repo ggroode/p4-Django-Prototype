@@ -9,14 +9,34 @@
       socket.onmessage = function(receivedMessage) {
         console.log(receivedMessage);
       }
+      /*
       app.sendMessage = function sendMessage(){
         let msg = document.getElementById('testInput').value;
         socket.send(msg);
+      }
+      */
+      var url = new URL(window.location.href);
+      var players = JSON.parse(url.searchParams.get("players"));
+      var presetPrompts = ["cats", "Australia", "mammals", "Berkeley", "noodles"];
+      var prompt = presetPrompts[Math.floor(Math.random() * presetPrompts.length)];
+      
+      app.playGame = function playGame() {
+        let roundTime = document.getElementById('time').value;
+        window.location.href = "{% url 'play' %}" 
+        + "?players=" + JSON.stringify(players) + "&time=" + roundTime + "&prompt=" + prompt;
       }
     }
   </script>
 {% endblock scripts %}
 {% block body %}
+  <!--
   <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn>
+  -->
+  <div>
+    <span>Enter a rount time in seconds:</span>
+    <input id="time"\>
+  </div>
+  
+  <button onclick="app.playGame()"> Play </button>
 {% endblock body %}
