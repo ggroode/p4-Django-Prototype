@@ -10,12 +10,13 @@
       $("#testInput").hide();
       $('#testBtn').hide();
       $('#timer').hide();
+      $('#wordReminder').hide();
       socket.onopen = function(){
         socket.send(JSON.stringify({name:'host',reset:true}));
       }
       app.story = "";
       app.prompts= ["space","UC Berkeley",'aliens','dogs','a prince in a castle','nuclear war','the apocolypse',
-      'fun things to do on a weekend','timetravel','your least favorite things','christmas','an angry old man',
+      'fun things to do on a weekend','time travel','your least favorite things','christmas','an angry old man',
       'a happy young couple'];
 
 
@@ -63,6 +64,7 @@
             $("#testInput").show();
             $('#testBtn').show();
             $('#timer').show();
+            $('#wordReminder').show();
           }
           console.log(data);
         }
@@ -71,8 +73,13 @@
 
 
       app.sendMessage = function(final){
-        let msg = document.getElementById('testInput').value;
-        let gameOver = msg.split(" ").length < app.minWords;
+        let msg = document.getElementById('testInput').value.trim();
+        let requiredWords=app.minWords
+        if (msg!=""){
+          requiredWords -= msg.split(/ +/).length;
+        }
+        $('#wordReminder').html(requiredWords + ' more words needed!');
+        let gameOver = requiredWords>0;
         socket.send(JSON.stringify({name:'host',id:app.storyID,story:app.story + " " + msg,gameOver:gameOver,final:final}));
       }
 
@@ -81,12 +88,14 @@
         $('#testInput').hide();
         $('#testBtn').hide();
         $('#timer').hide();
+        $('#wordReminder').hide();
       }
     }
   </script>
 {% endblock scripts %}
 {% block body %}
   <p id='timer'>?? Seconds Remaining</p>
+  <p id='wordReminder'>?? more words needed</p>
   <p id= 'topMessage'>Wait for the host</p>
   <input id="testInput"\>
   <btn id='testBtn' onclick="app.sendMessage(true)"> Submit </btn>
