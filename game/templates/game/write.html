@@ -7,21 +7,30 @@
     window.onload = function() {
       app.storyID=-1;
       var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
+
+      socket.onopen = function(){
+        socket.send(JSON.stringify({name:'host',reset:true}));
+      }
       app.story = "";
+
       socket.onmessage = function(receivedMessage) {
         let data = JSON.parse(receivedMessage.data);
         if (data['name']=="{{name}}"){
           if ('id' in data){ //handling storyID changes
             app.storyID = data['id'];
           }
-          if ('gameOver' in data){
+          if ('gameOver' in data){ //handling gameOver
             app.handleGameOver();
           }
-          else if ('story' in data){
+          else if ('story' in data){ //handling story Switch
             app.story = data['story'];
             $('#topMessage').html('Story so far: ' + app.story);
             document.getElementById('testInput').value="";
-          } else{
+          } else if ('reset' in data){ //Handling a game reset
+            window.location.href = window.location.href;
+
+          }
+          else{ //handling startup
             app.minWords = data['minWords'];
           }
           console.log(data);

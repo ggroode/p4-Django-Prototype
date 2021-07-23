@@ -18,9 +18,11 @@ def settings(request):
     return render(request, 'game/settings.html')
 
 def play(request):
-    players = request.GET.get('players',['Gavin','Yingyan']) #TODO: change default value of off testing one
+    players = json.loads(request.GET.get('players', "[\"Gavin\",\"Yingyan\"]")) #TODO: change default value of off testing one
     updateSpeed = request.GET.get('updateSpeed','normal')
-    return render(request, 'game/play.html',{'players':json.dumps(players),'playersList':players,'updateSpeed':updateSpeed})
+    time = request.GET.get('time',20)
+    prompt = request.GET.get('prompt','true')
+    return render(request, 'game/play.html',{'players':json.dumps(players),'playersList':players,'updateSpeed':updateSpeed,'roundTime':time,'prompt':prompt})
 
 def write(request):
     name = request.GET.get('name','Gavin') #TODO: change default value of off testing one

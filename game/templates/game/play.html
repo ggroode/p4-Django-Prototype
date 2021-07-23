@@ -11,7 +11,9 @@
       app.updateSpeed = "{{updateSpeed}}";
       app.gameOver = false;
       app.minWords = 6;
-
+      app.reset=0;
+      app.prompt={{prompt}};
+      $('#resetButton').hide();
 
 
       socket.onmessage = function(receivedMessage) {
@@ -21,19 +23,29 @@
           if (data['gameOver']){
             app.gameOver=true;
           }
+          if (data['reset']){
+            app.reset+=1;
+            if (app.reset == app.players.length){
+              window.location.href = window.location.href;
+            }
+          }
           app.stories[id] = data['story'];
           app.recieved+=1;
-          if ((app.updateSpeed == 'fast') || (app.recieved == app.players.length && (app.updateSpeed=='normal' || app.gameOver))) {
+
+          let allRecieved = app.recieved == app.players.length
+          if ((app.updateSpeed == 'fast') || (allRecieved && (app.updateSpeed=='normal' || app.gameOver))) {
             app.updateStories();
           }
-          //TODO: Check Game End Position
-          if (app.gameOver && app.recieved == app.players.length){
-            app.handleGameOver();
+          if (allRecieved){
+            if (app.gameOver){
+              app.handleGameOver();
+            }
+            else{
+              app.swapStories();
+              app.recieved=0;
+            }
           }
-          else if (app.recieved==app.players.length){
-            app.swapStories();
-            app.recieved=0;
-          }
+
         }
         console.log(receivedMessage['data']);
       }
@@ -41,6 +53,7 @@
       app.handleGameOver = function() {
           $('#Description').html('Game Over!');
           app.players.forEach((element) => socket.send(JSON.stringify({'name':element,'gameOver':true})));
+          $('#resetButton').show();
       }
 
       app.swapStories = function(){
@@ -60,18 +73,25 @@
           $('#'+id).html(app.stories[id]);
         }
       }
+
+      app.resetGame = function(){
+        app.players.forEach((element) => socket.send(JSON.stringify({'name':element,'reset':true})));
+      }
+
     }
   </script>
 {% endblock scripts %}
 {% block body %}
   <div class='container'>
-    <h2 class='text-center'>Collaborative Storytelling</h2>
-    <h5 id="Description">Write your stories on your phone!</h5>
+    <h3 class='text-center'>Collaborative Storytelling</h3>
+    <h5 id="Description" class='text-center'>Write your stories on your phone!</h5>
     <ol>
     {% for player in playersList %}
       <li id="{{forloop.counter}}"></li>
     {% endfor %}
     <ol>
+    <btn id="resetButton" class="btn btn-success" onclick="app.resetGame()"> Play Again </btn>
+
   </div>
   <!-- <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn> -->
