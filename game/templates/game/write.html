@@ -6,7 +6,11 @@
 
     window.onload = function() {
       app.storyID=-1;
-      var socket = new WebSocket('wss://' + window.location.host + '/ws/play');
+      if (location.protocal == 'https:'){
+        var socket = new WebSocket('wss://' + window.location.host + '/ws/play');
+      } else{
+        var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
+      }
       $("#testInput").hide();
       $('#testBtn').hide();
       $('#timer').hide();

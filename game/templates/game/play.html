@@ -5,7 +5,12 @@
     app = {}
 
     window.onload = function() {
-      var socket = new WebSocket('wss://' + window.location.host + '/ws/play');
+      if (location.protocal == 'https:'){
+        var socket = new WebSocket('wss://' + window.location.host + '/ws/play');
+      } else{
+        var socket = new WebSocket('ws://' + window.location.host + '/ws/play');
+      }
+
       app.players = {{players|safe}}
       app.recieved = 0;
       app.updateSpeed = "{{updateSpeed}}";

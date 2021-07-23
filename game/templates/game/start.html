@@ -5,7 +5,11 @@
     app = {}
 
     window.onload = function() {
-      var socket = new WebSocket('wss://' + window.location.host + '/ws/setup');
+      if (location.protocal == 'https:'){
+        var socket = new WebSocket('wss://' + window.location.host + '/ws/setup');
+      } else{
+        var socket = new WebSocket('ws://' + window.location.host + '/ws/setup');
+      }
       /*
       app.sendMessage = function sendMessage(){
         let msg = document.getElementById('testInput').value;
