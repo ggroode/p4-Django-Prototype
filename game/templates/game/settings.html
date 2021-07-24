@@ -5,7 +5,11 @@
     app = {}
 
     window.onload = function() {
-      var socket = new WebSocket('ws://' + window.location.host + '/ws/setup');
+      if (location.protocol == 'https:'){
+        var socket = new WebSocket('wss://' + window.location.host + '/ws/setup');
+      } else{
+        var socket = new WebSocket('ws://' + window.location.host + '/ws/setup');
+      }
       socket.onmessage = function(receivedMessage) {
         console.log(receivedMessage);
       }

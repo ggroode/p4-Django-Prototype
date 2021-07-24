@@ -5,7 +5,11 @@
     app = {}
 
     window.onload = function() {
-      var socket = new WebSocket('ws://' + window.location.host + '/ws/setup');
+      if (location.protocol == 'https:'){
+        var socket = new WebSocket('wss://' + window.location.host + '/ws/setup');
+      } else{
+        var socket = new WebSocket('ws://' + window.location.host + '/ws/setup');
+      }
       /*
       app.sendMessage = function sendMessage(){
         let msg = document.getElementById('testInput').value;
@@ -13,7 +17,7 @@
       }
       */
       var players = [];
-      
+
       socket.onmessage = function(receivedMessage) {
         let newName = receivedMessage.data;
         players.push(newName);
@@ -23,7 +27,7 @@
       $(document).ready(function() {
         $("#sb").click(function(){
           window.location.href = "{% url 'settings' %}" + "?players=" + JSON.stringify(players);
-        }); 
+        });
       });
     }
   </script>
