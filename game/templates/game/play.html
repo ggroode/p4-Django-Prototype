@@ -1,5 +1,28 @@
 {% extends 'game/base.html' %}
 
+
+{% block style %}
+<style>
+#stories{
+  outline: 5px solid black;
+  padding: 12px 4px 4px;
+}
+#Description{
+  padding:0px 0px 10px;
+}
+/* body{
+  background-color:lightblue;
+}
+.container{
+  background-color:white;!important
+} */
+#storyList{
+  font-weight: bold;
+}
+</style>
+{% endblock style %}
+
+
 {% block scripts %}
   <script>
     app = {}
@@ -98,16 +121,19 @@
   </script>
 {% endblock scripts %}
 {% block body %}
-  <div class='container'>
-    <h3 class='text-center'>Collaborative Storytelling</h3>
-    <h6 id="Description" class='text-center'>Write your stories on your phone!</h6>
-    <ol>
-    {% for player in playersList %}
-      <li id="{{forloop.counter}}"></li>
-    {% endfor %}
-    <ol>
-    <btn id="resetButton" class="btn btn-success btn-rounded" onclick="app.resetGame()"> Play Again </btn>
-
+  <div id="topTextDesktop">
+    <p id="titleDesktop">Collaborative Storytelling</p>
+  </div>
+  <div class='container' style="height:100%">
+    <h2 id="Description" class='text-center'>Write your stories on your phone!</h2>
+    <div id="stories">
+      <ol id="storyList">
+      {% for player in playersList %}
+        <li id="{{forloop.counter}}"></li>
+      {% endfor %}
+      <ol>
+    </div>
+    <btn id="resetButton" class="btn btn-success btn-rounded btn-lg" onclick="app.resetGame()"> Play Again </btn>
   </div>
   <!-- <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn> -->

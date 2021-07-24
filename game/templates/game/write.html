@@ -122,6 +122,7 @@
 
       app.handleGameOver = function (){
         $('#topMessage').html('Game Over! Look at main screen to see stories and wait for host to restart game.')
+        document.getElementById('testInput').value="";
         $('#testInput').hide();
         $('#testBtn').hide();
         $('#timer').hide();
@@ -131,7 +132,10 @@
   </script>
 {% endblock scripts %}
 {% block body %}
-  <div id='timer' class='btn' style='float:right'>??s</p>
+  <div id="topTextPhone">
+    <p id="titlePhone">Collaborative Storytelling</p>
+  </div>
+  <div id='timer' class='btn' style='float:right'>??s</div>
   <p id='wordReminder'>?? more words needed</p>
   <p id= 'topMessage'>Wait for the host</p>
   <input id="testInput"\>
