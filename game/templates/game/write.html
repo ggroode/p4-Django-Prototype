@@ -1,5 +1,27 @@
 {% extends 'game/base.html' %}
 
+{% block style %}
+  <style>
+    #topMessage{
+      font-size:22px;
+    }
+    #wordReminder{
+      font-size:18px;
+      padding: 5px 0px 0px;
+    }
+    .container{
+      padding:10px;
+    }
+    .textarea {
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 1px 6px;
+    }
+
+
+  </style>
+{% endblock style %}
 {% block scripts %}
   <script>
     app = {}
@@ -18,7 +40,6 @@
       socket.onopen = function(){
         socket.send(JSON.stringify({name:'host',reset:true}));
       }
-      app.story = "";
       app.prompts= ["space","UC Berkeley",'aliens','dogs','a prince in a castle','nuclear war','the apocolypse',
       'fun things to do on a weekend','time travel','your least favorite things','christmas','an angry old man',
       'a happy young couple'];
@@ -43,7 +64,7 @@
           if ('id' in data){ //handling storyID changes
             app.storyID = data['id'];
           }
-          if ('gameOver' in data){ //handling gameOver
+          if (data['gameOver']){ //handling gameOver
             app.handleGameOver();
           }
           else if ('story' in data){ //handling story Switch
@@ -70,6 +91,7 @@
             app.minWords = data['minWords'];
             app.oneWord = data['oneWord'];
             app.word="";
+            app.story = "";
             if (data['prompt']){
               let prompt = app.prompts[Math.floor(Math.random()*app.prompts.length)];
               $('#topMessage').html('Write a story about ' + prompt +":")
@@ -78,6 +100,9 @@
               $('#topMessage').html('Write a story:')
             }
             app.roundTime = data['roundTime'];
+            if(app.timerId){
+              clearTimeout(app.timerId);
+            }
             app.timeLeft = data['roundTime'];
             app.timerId = setInterval(app.countdown,1000);
             $("#testInput").show();
@@ -135,9 +160,16 @@
   <div id="topTextPhone">
     <p id="titlePhone">Collaborative Storytelling</p>
   </div>
-  <div id='timer' class='btn' style='float:right'>??s</div>
-  <p id='wordReminder'>?? more words needed</p>
-  <p id= 'topMessage'>Wait for the host</p>
-  <input id="testInput"\>
+  <div class='container'>
+    <div id='timer' class='btn border' style='float:right'>??s</div>
+    <center>
+      <p id='wordReminder'>?? more words needed</p>
+    </center>
+    <center>
+      <p id= 'topMessage'>Wait for the host</p>
+      <textarea id="testInput" rows="4" cols="30"> </textarea>
+    </center>
+  </div>
+
   <!-- <btn id='testBtn' onclick="app.sendMessage(true)"> Submit </btn> -->
 {% endblock body %}
