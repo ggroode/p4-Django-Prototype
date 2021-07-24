@@ -39,30 +39,75 @@
     }
   </script>
 {% endblock scripts %}
+
+{% block style %}
+<style>
+  #pb {
+    margin-top: 50px;
+    margin-left: 430px;
+  }
+  .col-6 {
+    text-align: center;
+    outline: 5px solid black;
+  }
+  #p1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+  }
+  #s1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    text-align: left;
+  }
+  #s2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    text-align: left;
+  }
+</style>
+{% endblock style %}
+
 {% block body %}
   <!--
   <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn>
   -->
-  <div>
-    <span>Enter a round time in seconds:</span>
-    <input id="time"\>
+  <div id="topTextDesktop">
+    <p id="titleDesktop">Settings</p>
   </div>
 
-  <div>
-    <span>Enable Prompt:</span>
-    <label class="switch">
-      <input type="checkbox" onclick="app.clickPromptSwitch()">
-      <span class="slider round"></span>
-    </label>
-  </div>
-  <div>
-    <span>Enable Required Word:</span>
-    <label class="switch">
-      <input type="checkbox" onclick="app.clickRequiredWordSwitch()">
-      <span class="slider round"></span>
-    </label>
-  </div>
+  <br><br>
 
-  <button onclick="app.playGame()"> Play </button>
+  <div class="container">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6">
+        <p id="p1">Enter Round Time (Seconds)</p>
+        <input id="time" style="height:50px; width:300px; text-align: center;"\>
+
+        <br><br>
+        
+        <span id="s1">Prompt</span>
+        <label class="switch">
+          <input type="checkbox" onclick="app.clickPromptSwitch()">
+          <span class="slider round"></span>
+        </label>
+
+        <br><br>
+
+        <span id="s2">Required Word</span>
+        <label class="switch">
+          <input type="checkbox" onclick="app.clickRequiredWordSwitch()">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="col-3"></div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <btn id="pb" class="btn btn-success" style="width:250px; height:75px; font-size: 35px;" onclick="app.playGame()"> PLAY </btn>
+      </div>
+    </div>
+  </div>
 {% endblock body %}
