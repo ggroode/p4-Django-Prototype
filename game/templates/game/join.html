@@ -32,7 +32,16 @@
   <input id="testInput"\>
   <btn onclick="app.sendMessage()"> Submit </btn>
   -->
-  <div id="topText">Enter your name then press join!</div>
-  <input id="name"\>
-  <btn onclick="app.getNameAndJoin()"> Join </btn>
+  <div id="topTextPhone">
+    <p id="titlePhone">Collaborative Storytelling</p>
+  </div>
+  <div style="height: 27%;"></div>
+  <div id="nameJoinSection">
+    <center>
+      <p style="font-size: 22px; padding-top: 20px;">Enter Name</p>
+      <input id="name" style="text-align: center;"\>
+      <br><br>
+      <btn class="btn btn-success btn-lg btn-rounded" onclick="app.getNameAndJoin()"> JOIN </btn>
+    </center>
+  </div>
 {% endblock body %}
