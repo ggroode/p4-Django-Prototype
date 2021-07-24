@@ -28,24 +28,73 @@
     }
   </script>
 {% endblock scripts %}
+
+{% block style %}
+  <style>
+    #topTextDesktop {
+      height : 20%;
+      background-color: #2DC0FF;
+    }
+
+    #titleDesktop {
+        text-align: center;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 70px;
+    }
+    .col-4 {
+      text-align: center;
+      outline: 5px solid black;
+
+    }
+    #qrMsg {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 30px;
+    }
+    #qrcode {
+      margin:0 auto;
+      padding-left: 45px;
+      padding-bottom: 20px;
+    }
+    #playerListMsg {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 30px;
+    }
+    .bigButton {
+      background-color: #49E023;
+    }
+  </style>
+{% endblock style %}
+
 {% block body %}
-  <div id="topText">
-    Welcome to Collaborative Storytelling!
+  <div id="topTextDesktop">
+    <p id="titleDesktop">Collaborative Storytelling</p>
   </div>
   
-  <div id="qrcode">
-    <p>Scan QR Code to Register.</p>
-  </div>
-  <script type="text/javascript">
-    new QRCode(document.getElementById("qrcode"), window.location.href + "join");
-  </script>
-  
-  <div>
-    <p>Current Players:</p>
-    <ol id="playersList"></ol>
-  </div>
-  
-  <div id="start">
-    <button id="sb">Start</button>
+  <br><br>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-1"></div>
+      <div class="col-4">
+        <p id="qrMsg">Scan to Register.</p>
+        <p id="qrcode"></p>
+        <script type="text/javascript">
+          new QRCode(document.getElementById("qrcode"), window.location.href + "join");
+        </script>
+      </div>
+      <div class="col-2"></div>
+      <div class="col-4">
+        <p id="playerListMsg">Current Players</p>
+        <ol id="playersList"></ol>
+      </div>
+      <div class="col-1"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <btn class=bigButton btn-success btn-rounded lightFont>START</btn>
+      </div>
+    </div>
   </div>
 {% endblock body %}
