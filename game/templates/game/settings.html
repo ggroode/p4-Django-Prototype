@@ -46,7 +46,7 @@
     margin-top: 50px;
     margin-left: 430px;
   }
-  .col-6 {
+  #settingsBox{
     text-align: center;
     outline: 5px solid black;
   }
@@ -56,12 +56,12 @@
   }
   #s1 {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
+    font-size: 26px;
     text-align: left;
   }
   #s2 {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
+    font-size: 26px;
     text-align: left;
   }
 </style>
@@ -81,29 +81,36 @@
   <div class="container">
     <div class="row">
       <div class="col-3"></div>
-      <div class="col-6">
+      <div id="settingsBox" class="col-6">
         <p id="p1">Enter Round Time (Seconds)</p>
         <input id="time" style="height:50px; width:300px; text-align: center;"\>
 
         <br><br>
-        
-        <span id="s1">Prompt</span>
-        <label class="switch">
-          <input type="checkbox" onclick="app.clickPromptSwitch()">
-          <span class="slider round"></span>
-        </label>
 
-        <br><br>
+        <div class="row">
+          <div class="col-8" style="text-align:left;padding-left:120px">
+            <span id="s1">Prompt:</span>
+            <br>
+            <span id="s2">Required Word:</span>
+          </div>
+          <div class="col-4" style="text-align:left;padding:4px 0px 0px">
+            <label class="switch">
+              <input type="checkbox" onclick="app.clickPromptSwitch()">
+              <span class="slider round"></span>
+            </label>
+            <br>
+            <label class="switch">
+              <input type="checkbox" onclick="app.clickRequiredWordSwitch()">
+              <span class="slider round"></span>
+            </label>
+          </div>
 
-        <span id="s2">Required Word</span>
-        <label class="switch">
-          <input type="checkbox" onclick="app.clickRequiredWordSwitch()">
-          <span class="slider round"></span>
-        </label>
+
+        </div>
       </div>
       <div class="col-3"></div>
     </div>
-    
+
     <div class="row">
       <div class="col-12">
         <btn id="pb" class="btn btn-success" style="width:250px; height:75px; font-size: 35px;" onclick="app.playGame()"> PLAY </btn>
