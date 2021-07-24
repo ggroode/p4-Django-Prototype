@@ -31,7 +31,7 @@
           app.sendMessage(true);
           app.timeLeft = app.roundTime;
         } else {
-          $('#timer').html(app.timeLeft + ' seconds remaining');
+          $('#timer').html(app.timeLeft + 's');
           app.sendMessage(false);
           app.timeLeft--;
         }
@@ -131,9 +131,9 @@
   </script>
 {% endblock scripts %}
 {% block body %}
-  <p id='timer'>?? Seconds Remaining</p>
+  <div id='timer' class='btn' style='float:right'>??s</p>
   <p id='wordReminder'>?? more words needed</p>
   <p id= 'topMessage'>Wait for the host</p>
   <input id="testInput"\>
-  <btn id='testBtn' onclick="app.sendMessage(true)"> Submit </btn>
+  <!-- <btn id='testBtn' onclick="app.sendMessage(true)"> Submit </btn> -->
 {% endblock body %}
